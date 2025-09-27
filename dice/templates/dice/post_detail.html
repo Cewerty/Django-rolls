@@ -1,0 +1,15 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>{{ post.title }}</title>
+    </head>
+    <body>
+        <a href="{% url 'blog:post_list' %}">Назад ко всем постам</a>
+        <hr>
+        <h1>{{ post.title }}</h1>
+        <div>
+            {{ post.content|linebreaks }}
+        </div>
+    </body>
+    </html>
+
