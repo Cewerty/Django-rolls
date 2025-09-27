@@ -1,22 +1,31 @@
-
+{% load static %}
     <!DOCTYPE html>
     <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/pico.min.css' %}">
         <title>Мой Блог</title>
     </head>
     <body>
-        <h1>Посты моего блога</h1>
-        {% for post in posts %}
-            <div>
-                <h2>
-                    <a href="{% url 'blog:post_detail' pk=post.pk %}">
-                        {{ post.title }}
+        <main class='container-fluid'>
+        <header>
+        <h1>Оружия</h1>
+        </header>
+        <main class='container'>
+        {% for weapon in weapons %}
+            <article>
+                <header>
+                    <h2>
+                    <a href="{% url 'dice:weapon_detail' pk=weapon.pk %}">
+                        {{ weapon.name }}
                     </a>
-                </h2>
-                <p>Автор: {{ post.author.username }} | Опубликовано: {{ post.pub_date|date:"d M Y" }}</p>
-                <p>{{ post.content|truncatewords:30 }}</p>
-            </div>
-            <hr>
+                    </h2>
+                </header>
+                <p>{{ weapon.damage|truncatewords:30 }}</p>
+            </article>
         {% endfor %}
+        </main>
+        </main>
     </body>
     </html>
