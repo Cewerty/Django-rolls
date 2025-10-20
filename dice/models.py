@@ -38,14 +38,14 @@ class WeaponType(models.Model):
 
         verbose_name = "Вид оружия"
         verbose_name_plural = "Виды оружия"
-        ordering: ClassVar = ["name"]
-        indexes: ClassVar = [
+        ordering: ClassVar[list[str]] = ["name"]
+        indexes: ClassVar[list[models.Index]] = [
             models.Index(fields=["id"], name="weapon_type_id_idx"),
         ]
 
     def __str__(self) -> str:
         """Return string representation of weapon type."""
-        return self.name
+        return f"{self.name}"
 
 
 class Weapon(models.Model):
@@ -98,8 +98,8 @@ class Weapon(models.Model):
 
         verbose_name = "Оружие"
         verbose_name_plural = "Оружия"
-        ordering: ClassVar = ["weapon_type__name", "name"]
-        indexes: ClassVar = [
+        ordering: ClassVar[list[str]] = ["weapon_type__name", "name"]
+        indexes: ClassVar[list[models.Index]] = [
             models.Index(fields=["id"], name="weapon_id_idx"),
         ]
 
@@ -142,14 +142,14 @@ class ArmorType(models.Model):
 
         verbose_name = "Вид доспеха"
         verbose_name_plural = "Виды доспеха"
-        ordering: ClassVar = ["name"]
-        indexes: ClassVar = [
+        ordering: ClassVar[list[str]] = ["name"]
+        indexes: ClassVar[list[models.Index]] = [
             models.Index(fields=["id"], name="armor_type_id_idx"),
         ]
 
     def __str__(self) -> str:
         """Return string representation of armor type."""
-        return self.name
+        return f"{self.name}"
 
 
 class Armor(models.Model):
@@ -202,8 +202,8 @@ class Armor(models.Model):
 
         verbose_name = "Доспех"
         verbose_name_plural = "Доспехи"
-        ordering: ClassVar = ["armor_type__name", "name"]
-        indexes: ClassVar = [
+        ordering: ClassVar[list[str]] = ["armor_type__name", "name"]
+        indexes: ClassVar[list[models.Index]] = [
             models.Index(fields=["id"], name="armor_id_idx"),
         ]
 
