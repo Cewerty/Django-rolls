@@ -10,9 +10,9 @@
     </head>
     <body>
         <main class='container-fluid'>
-        <form method="get" action="/api/items">
+        <form id="notation-form" method="get" action="{{ roll_api_url }}" role='text'>
         <fieldset role="group" class='container-fluid pico-color-red-650'>
-            {% comment %} <legend>Search</legend> {% endcomment %}
+            <legend><h2>Notation</h2></legend>
             <input
             type="text"
             id="q"
@@ -25,73 +25,82 @@
             <button type="submit">Send</button>
         </fieldset>
         </form>
-        <main class='container'>
+        <section aria-labelledby="weapons-heading">
+        <h2 id="weapons-heading">Weapons</h2>
+        {% for wt in weapon_types %}
         <details>
-        <summary role="button" class="contrast">Оружия</summary>
-        {% for weapon in weapons %}
+        <summary role="button">{{ wt.name }}</summary>
+        {% for w in wt.weapons.all %}
         <div class='grid'>
             <article class='container-fluid'>
                 <header>
                     <h2>
-                        {{ weapon.name }}
+                        {{ w.name }}
                     </h2>
                 </header>
-                <p>{{ weapon.damage|truncatewords:30 }}</p>
+                {% with formula=w.damage %}
+                <a href="#" data-fill>{{ formula }}</a>
+                {% endwith %}
             </article>
             </div>
         {% endfor %}
         </details>
-        </main>
-        <section aria-labelledby="weapons-heading">
-  <h2 id="weapons-heading">Weapons</h2>
+        {% endfor %}
+        </section>
 
-  <details>
-    <summary role="button">Swords</summary>
-    <ul>
-      <li>
-        <article>
-          <h3>Longsword</h3>
-          <!-- data-fill указывает, что текст ссылки берём как значение для формы -->
-          <a href="#" data-fill>Longsword: 1d8 slashing</a>
-        </article>
-      </li>
-      <li>
-        <article>
-          <h3>Shortsword</h3>
-          <a href="#" data-fill>Shortsword: 1d6 piercing</a>
-        </article>
-      </li>
-    </ul>
-  </details>
-</section>
-
-    <section aria-labelledby="armors-heading">
-    <h2 id="armors-heading">Armors</h2>
-
-    <details>
-        <summary>Light</summary>
-        <ul>
-        <li>
-            <article>
-            <h3>Leather Armor</h3>
-            <a href="#" data-fill>Leather Armor: AC 11</a>
+        <section aria-labelledby="armors-heading">
+        <h2 id="armors-heading">Armors</h2>
+        {% for at in armor_types %}
+        <details>
+        <summary role="button">{{ at.name }}</summary>
+        {% for a in at.armors.all %}
+        <div class='grid'>
+            <article class='container-fluid'>
+                <header>
+                    <h2>
+                        {{ a.name }}
+                    </h2>
+                </header>
+                {% with formula=a.armor_class %}
+                <a href="#" data-fill>{{ formula }}</a>
+                {% endwith %}
             </article>
-        </li>
-        </ul>
-    </details>
-
-    <details>
-        <summary>Heavy</summary>
-        <ul>
-        <li>
-            <article>
-            <h3>Chain Mail</h3>
-            <a href="#" data-fill>Chain Mail: AC 16</a>
-            </article>
-        </li>
-        </ul>
-    </details>
-    </section>
+            </div>
+        {% endfor %}
+        </details>
+        {% endfor %}
+        </section>
+        
         </main>
-    </body>
-    </html>
+<script>
+(function () {
+const form = document.getElementById('notation-form');
+if (!form) return;
+const input = form.querySelector('input[name="q"]');
+if (!input) return;
+
+function submitWithText(text) {const value = (text || '').trim();
+          if (!value) return;
+          input.value = value;
+        }
+
+        document.addEventListener('click', function (e) {
+          const link = e.target.closest('a[data-fill]');
+          if (!link) return;
+          e.preventDefault();
+          submitWithText(link.textContent);
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key !== 'Enter' && e.key !== ' ') return;
+          const active = document.activeElement;
+          if (!active) return;
+          const link = active.closest('a[data-fill]');
+          if (!link) return;
+          e.preventDefault();
+          submitWithText(link.textContent);
+        });
+      })();
+    </script>
+  </body>
+</html>
