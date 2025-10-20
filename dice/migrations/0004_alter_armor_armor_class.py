@@ -4,15 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('dice', '0003_alter_weapon_options_remove_weapon_cost_and_more'),
+        ("dice", "0003_alter_weapon_options_remove_weapon_cost_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='armor',
-            name='armor_class',
-            field=models.CharField(help_text="Класс/тип защиты (например, '11 + Модификатор Ловкости')", max_length=50, verbose_name='Класс доспеха'),
+            model_name="armor",
+            name="armor_class",
+            field=models.CharField(
+                help_text="Класс/тип защиты (например, '11 + Модификатор Ловкости')",
+                max_length=50,
+                verbose_name="Класс доспеха",
+            ),
         ),
     ]
