@@ -1,9 +1,108 @@
 [project]
 name = "django-play"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.2.3"
+description = "Django client for diceroller RestAPI"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
+    "django-stubs>=5.2.7",
     "django>=5.2.6",
 ]
+
+[tool.uv]
+dev-dependencies = [
+    "django-stubs>=5.2.7",
+    "mypy>=1.18.2",
+    "pre-commit>=4.3.0",
+    "ruff>=0.14.1",
+    "uv>=0.9.4",
+]
+
+[tool.ruff]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+    "hello.py",
+    "docs"
+]
+line-length = 120
+indent-width = 4
+
+[tool.ruff.lint]
+preview = true
+select = [
+        # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    "C90",
+    "PL",
+    "RUF",
+    "TRY",
+    "ANN",
+    "S",
+    "B",
+    "D",
+    "N",
+    "PL"
+]
+fixable = ["ALL"]
+unfixable = []
+ignore = ["PLR6301", "TRY003", "D212", "D211", "RUF002", "D203", "PLC0414", "D100"]
+exclude = ['tests*', "./dice/migrations/*"]
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["mypy_django_plugin.main"]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unused_ignores = true
+
+[tool.django-stubs]
+django_settings_module = "project.settings"
+
+[[tool.mypy.overrides]]
+module = [
+    "dice.migrations.*",
+    "manage",
+    "project.*"
+]
+ignore_errors = true

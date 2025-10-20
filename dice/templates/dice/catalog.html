@@ -1,102 +1,104 @@
 {% load static %}
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'css/pico.red.css' %}">
-        <link rel="stylesheet" href="{% static 'css/pico.colors.css' %}">
-        <title>Notation</title>
-    </head>
-    <body>
-        <main class='container-fluid'>
-        <form id="notation-form" method="get" action="{{ roll_api_url }}" role='text'>
-        <fieldset role="group" class='container-fluid pico-color-red-650'>
-            <legend><h2>Notation</h2></legend>
-            <input
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/pico.red.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pico.colors.css' %}">
+    <title>Notation</title>
+  </head>
+  <body>
+    <main class="container-fluid">
+      <form id="notation-form" method="get" action="{{ roll_api_url }}" role="text">
+        <fieldset role="group" class="container-fluid pico-color-red-650">
+          <legend><h2>Notation</h2></legend>
+          <input
             type="text"
             id="q"
             name="q"
             placeholder="Type notation or pick from the list"
             aria-label="Query"
-            required
             label="Notation"
-            />
-            <button type="submit">Send</button>
+            required
+          />
+          <button type="submit">Send</button>
         </fieldset>
-        </form>
-        <section aria-labelledby="weapons-heading">
+      </form>
+
+      <section aria-labelledby="weapons-heading">
         <h2 id="weapons-heading">Weapons</h2>
         {% for wt in weapon_types %}
-        <details>
-        <summary role="button">{{ wt.name }}</summary>
-        {% for w in wt.weapons.all %}
-        <div class='grid'>
-            <article class='container-fluid'>
-                <header>
-                    <h2>
-                        {{ w.name }}
-                    </h2>
-                </header>
-                {% with formula=w.damage %}
-                <a href="#" data-fill>{{ formula }}</a>
-                {% endwith %}
-            </article>
-            </div>
+          <details>
+            <summary role="button">{{ wt.name }}</summary>
+            {% for w in wt.weapons.all %}
+              <div class="grid">
+                <article class="container-fluid">
+                  <header>
+                    <h2>{{ w.name }}</h2>
+                  </header>
+                  {% with formula=w.damage %}
+                    <a href="#" data-fill>{{ formula }}</a>
+                  {% endwith %}
+                </article>
+              </div>
+            {% endfor %}
+          </details>
         {% endfor %}
-        </details>
-        {% endfor %}
-        </section>
+      </section>
 
-        <section aria-labelledby="armors-heading">
+      <section aria-labelledby="armors-heading">
         <h2 id="armors-heading">Armors</h2>
         {% for at in armor_types %}
-        <details>
-        <summary role="button">{{ at.name }}</summary>
-        {% for a in at.armors.all %}
-        <div class='grid'>
-            <article class='container-fluid'>
-                <header>
-                    <h2>
-                        {{ a.name }}
-                    </h2>
-                </header>
-                {% with formula=a.armor_class %}
-                <a href="#" data-fill>{{ formula }}</a>
-                {% endwith %}
-            </article>
-            </div>
+          <details>
+            <summary role="button">{{ at.name }}</summary>
+            {% for a in at.armors.all %}
+              <div class="grid">
+                <article class="container-fluid">
+                  <header>
+                    <h2>{{ a.name }}</h2>
+                  </header>
+                  {% with formula=a.armor_class %}
+                    <a href="#" data-fill>{{ formula }}</a>
+                  {% endwith %}
+                </article>
+              </div>
+            {% endfor %}
+          </details>
         {% endfor %}
-        </details>
-        {% endfor %}
-        </section>
-        
-        </main>
-<script>
-(function () {
-const form = document.getElementById('notation-form');
-if (!form) return;
-const input = form.querySelector('input[name="q"]');
-if (!input) return;
+      </section>
+    </main>
 
-function submitWithText(text) {const value = (text || '').trim();
+    <script>
+      (() => {
+        const form = document.getElementById('notation-form');
+        if (!form) return;
+
+        const input = form.querySelector('input[name="q"]');
+        if (!input) return;
+
+        function submitWithText(text) {
+          const value = (text || '').trim();
           if (!value) return;
           input.value = value;
         }
 
-        document.addEventListener('click', function (e) {
+        document.addEventListener('click', (e) => {
           const link = e.target.closest('a[data-fill]');
           if (!link) return;
           e.preventDefault();
           submitWithText(link.textContent);
         });
 
-        document.addEventListener('keydown', function (e) {
+        document.addEventListener('keydown', (e) => {
           if (e.key !== 'Enter' && e.key !== ' ') return;
+
           const active = document.activeElement;
           if (!active) return;
+
           const link = active.closest('a[data-fill]');
           if (!link) return;
+
           e.preventDefault();
           submitWithText(link.textContent);
         });

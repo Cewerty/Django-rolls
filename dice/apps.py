@@ -16,6 +16,6 @@ class DiceConfig(AppConfig):
             The full Python path to the application.
 
     """
-    
+
     default_auto_field = "django.db.models.BigAutoField"
     name = "dice"
