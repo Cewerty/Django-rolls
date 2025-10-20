@@ -1,0 +1,97 @@
+{% load static %}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/pico.red.css' %}">
+        <link rel="stylesheet" href="{% static 'css/pico.colors.css' %}">
+        <title>Notation</title>
+    </head>
+    <body>
+        <main class='container-fluid'>
+        <form method="get" action="/api/items">
+        <fieldset role="group" class='container-fluid pico-color-red-650'>
+            {% comment %} <legend>Search</legend> {% endcomment %}
+            <input
+            type="text"
+            id="q"
+            name="q"
+            placeholder="Type notation or pick from the list"
+            aria-label="Query"
+            required
+            label="Notation"
+            />
+            <button type="submit">Send</button>
+        </fieldset>
+        </form>
+        <main class='container'>
+        <details>
+        <summary role="button" class="contrast">Оружия</summary>
+        {% for weapon in weapons %}
+        <div class='grid'>
+            <article class='container-fluid'>
+                <header>
+                    <h2>
+                        {{ weapon.name }}
+                    </h2>
+                </header>
+                <p>{{ weapon.damage|truncatewords:30 }}</p>
+            </article>
+            </div>
+        {% endfor %}
+        </details>
+        </main>
+        <section aria-labelledby="weapons-heading">
+  <h2 id="weapons-heading">Weapons</h2>
+
+  <details>
+    <summary role="button">Swords</summary>
+    <ul>
+      <li>
+        <article>
+          <h3>Longsword</h3>
+          <!-- data-fill указывает, что текст ссылки берём как значение для формы -->
+          <a href="#" data-fill>Longsword: 1d8 slashing</a>
+        </article>
+      </li>
+      <li>
+        <article>
+          <h3>Shortsword</h3>
+          <a href="#" data-fill>Shortsword: 1d6 piercing</a>
+        </article>
+      </li>
+    </ul>
+  </details>
+</section>
+
+    <section aria-labelledby="armors-heading">
+    <h2 id="armors-heading">Armors</h2>
+
+    <details>
+        <summary>Light</summary>
+        <ul>
+        <li>
+            <article>
+            <h3>Leather Armor</h3>
+            <a href="#" data-fill>Leather Armor: AC 11</a>
+            </article>
+        </li>
+        </ul>
+    </details>
+
+    <details>
+        <summary>Heavy</summary>
+        <ul>
+        <li>
+            <article>
+            <h3>Chain Mail</h3>
+            <a href="#" data-fill>Chain Mail: AC 16</a>
+            </article>
+        </li>
+        </ul>
+    </details>
+    </section>
+        </main>
+    </body>
+    </html>
