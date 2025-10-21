@@ -5,6 +5,7 @@ description = "Django client for diceroller RestAPI"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "django-stubs-ext>=5.2.7",
     "django-stubs>=5.2.7",
     "django>=5.2.6",
 ]

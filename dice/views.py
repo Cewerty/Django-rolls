@@ -40,6 +40,6 @@ def equipment_list(request: HttpRequest) -> HttpResponse:
         {
             "weapon_types": weapon_types,
             "armor_types": armor_types,
-            "dice_api_url": "/api/roll",
+            "roll_api_url": "/api/roll",
         },
     )
