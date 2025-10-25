@@ -10,8 +10,8 @@ dependencies = [
     "django>=5.2.6",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "django-stubs>=5.2.7",
     "mypy>=1.18.2",
     "pre-commit>=4.3.0",

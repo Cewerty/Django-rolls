@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+from typing import Any
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -52,7 +52,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "project.urls"
 
-TEMPLATES = [
+TEMPLATES: list[dict[str, Any]] = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [],
@@ -73,7 +73,7 @@ WSGI_APPLICATION = "project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
+DATABASES  = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
