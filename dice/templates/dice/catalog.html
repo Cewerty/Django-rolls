@@ -18,7 +18,7 @@
             <input
               type="text"
               id="dice-notation"
-              name="notation"
+              name="dice-notation"
               placeholder="Type notation or pick from the list (e.g., 2d6+3)"
               aria-label="Dice notation"
               required
@@ -84,12 +84,7 @@
         const input = form.querySelector('input[name="dice-notation"]');
         if (!input) return;
 
-        function submitWithText(text) {
-          const value = (text || '').trim();
-          if (!value) return;
-          input.value = value;
-        }
-
+        // Клик по ссылкам в списке
         document.addEventListener('click', (e) => {
           const link = e.target.closest('a[data-fill]');
           if (!link) return;
@@ -122,16 +117,16 @@
 
             function displayResult(result) {
                 let resultHTML = '';
-                
+
                 if (result.status === 'success') {
                     resultHTML = `
                         <div class="roll-result roll-success">
                             <div class="dice-expression">${result.expression}</div>
                             <div class="dice-total">${result.total}</div>
                             <div class="dice-details">
-                                ${result.details}
-                                ${result.modifier !== 0 ? ` | Модификатор: ${result.modifier >= 0 ? '+' : ''}${result.modifier}` : ''}
+                                ${result.modifier}
                             </div>
+                            <div class="dice-rolls">${result.rolls}</div>
                         </div>
                     `;
                 } else {
@@ -144,7 +139,7 @@
                         </div>
                     `;
                 }
-                
+
                 resultContainer.innerHTML = resultHTML;
                 resultContainer.classList.remove('hidden');
                 resultContainer.scrollIntoView({ behavior: 'smooth' });
@@ -152,14 +147,14 @@
 
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                
+
                 const notation = diceNotationInput.value.trim();
                 if (!notation) return;
-                
+
                 spinner.classList.remove('hidden');
                 buttonText.textContent = '';
                 rollButton.disabled = true;
-                
+
                 try {
                     const response = await fetch(rollApiUrl, {
                         method: 'POST',
@@ -171,10 +166,10 @@
                             'notation': notation
                         })
                     });
-                    
+
                     const result = await response.json();
                     displayResult(result);
-                    
+
                 } catch (error) {
                     displayResult({
                         status: 'error',

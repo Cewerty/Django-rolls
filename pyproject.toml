@@ -5,6 +5,7 @@ description = "Django client for diceroller RestAPI"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "diceroller",
     "django-stubs-ext>=5.2.7",
     "django-stubs>=5.2.7",
     "django>=5.2.6",
@@ -18,6 +19,9 @@ dev = [
     "ruff>=0.14.1",
     "uv>=0.9.4",
 ]
+
+[tool.uv.sources]
+diceroller = { git = "https://github.com/Cewerty/DiceRolling", rev = "main" }
 
 [tool.ruff]
 exclude = [

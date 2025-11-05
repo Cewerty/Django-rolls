@@ -1,50 +1,48 @@
+from diceroller.exceptions import InvalidDiceError
+from diceroller.utils.parser import parse_dice_notation
 from django.db.models import Prefetch
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
-from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_protect
-from diceroller.utils.parser import parse_dice_notation
-from diceroller.exceptions import InvalidDiceError
+from django.views.decorators.http import require_POST
 
 from .models import Armor, ArmorType, Weapon, WeaponType
+
 
 @require_POST
 @csrf_protect
 def roll_dice(request: HttpRequest) -> JsonResponse:
     """
     Обрабатывает AJAX-запросы для броска кубиков с использованием вашего парсера Lark.
-    
+
     Args:
         request: POST-запрос с параметром 'notation'
-        
+
     Returns:
         JsonResponse с результатом броска или ошибкой
+
     """
-    notation = request.POST.get('notation', '').strip()
-    
+    notation = request.POST.get("notation", "").strip()
+
     if not notation:
-        return JsonResponse({
-            'status': 'error',
-            'error': 'Пустая нотация'
-        }, status=400)
-    
+        return JsonResponse({"status": "error", "error": "Пустая нотация"}, status=400)
+
     try:
         parsed = parse_dice_notation(notation)
-        roll_result = parsed.result.roll(modifier=parsed.modifier)
-        return JsonResponse({
-            'status': 'success',
-            'expression': notation,
-            'total': roll_result['total'],
-            'rolls': roll_result['rolls'],
-            'modifier': parsed.modifier,    
-            'details': f"Броски: {', '.join(map(str, roll_result['rolls']))}"
-        })
-        
+        roll_result = parsed.result.roll()
+        return JsonResponse(
+            {
+                "status": "success",
+                "expression": notation,
+                "total": sum(roll_result) + parsed.modifier,
+                "rolls": roll_result,
+                "modifier": parsed.modifier,
+            }
+        )
+
     except (ValueError, InvalidDiceError, Exception) as e:
-        return JsonResponse({
-            'status': 'error',
-            'error': str(e)
-        }, status=400)
+        return JsonResponse({"status": "error", "error": str(e)}, status=400)
+
 
 def equipment_list(request: HttpRequest) -> HttpResponse:
     """
