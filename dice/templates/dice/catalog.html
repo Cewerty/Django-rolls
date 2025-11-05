@@ -10,21 +10,28 @@
   </head>
   <body>
     <main class="container-fluid">
-      <form id="notation-form" method="get" action="{{ roll_api_url }}" role="text">
-        <fieldset role="group" class="container-fluid pico-color-red-650">
-          <legend><h2>Notation</h2></legend>
-          <input
-            type="text"
-            id="q"
-            name="q"
-            placeholder="Type notation or pick from the list"
-            aria-label="Query"
-            label="Notation"
-            required
-          />
-          <button type="submit">Send</button>
-        </fieldset>
-      </form>
+      <section>
+        <form id="notation-form" method="post" role="form">
+          <fieldset role="group" class="container-fluid pico-color-red-650">
+            <legend><h2>Notation</h2></legend>
+            {% csrf_token %}
+            <input
+              type="text"
+              id="dice-notation"
+              name="notation"
+              placeholder="Type notation or pick from the list (e.g., 2d6+3)"
+              aria-label="Dice notation"
+              required
+            />
+            <button type="submit" id="roll-button">
+              <span class="spinner hidden"></span>
+              <span class="button-text">Send</span>
+            </button>
+          </fieldset>
+        </form>
+
+        <div id="roll-result-container" class="hidden"></div>
+      </section>
 
       <section aria-labelledby="weapons-heading">
         <h2 id="weapons-heading">Weapons</h2>
@@ -74,7 +81,7 @@
         const form = document.getElementById('notation-form');
         if (!form) return;
 
-        const input = form.querySelector('input[name="q"]');
+        const input = form.querySelector('input[name="dice-notation"]');
         if (!input) return;
 
         function submitWithText(text) {
@@ -101,6 +108,88 @@
 
           e.preventDefault();
           submitWithText(link.textContent);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('notation-form');
+            const rollButton = document.getElementById('roll-button');
+            const spinner = rollButton.querySelector('.spinner');
+            const buttonText = rollButton.querySelector('.button-text');
+            const resultContainer = document.getElementById('roll-result-container');
+            const diceLinks = document.querySelectorAll('.dice-link');
+            const diceNotationInput = document.getElementById('dice-notation');
+            const rollApiUrl = "{% url 'dice:roll_dice' %}";
+
+            function displayResult(result) {
+                let resultHTML = '';
+                
+                if (result.status === 'success') {
+                    resultHTML = `
+                        <div class="roll-result roll-success">
+                            <div class="dice-expression">${result.expression}</div>
+                            <div class="dice-total">${result.total}</div>
+                            <div class="dice-details">
+                                ${result.details}
+                                ${result.modifier !== 0 ? ` | Модификатор: ${result.modifier >= 0 ? '+' : ''}${result.modifier}` : ''}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultHTML = `
+                        <div class="roll-result roll-error">
+                            <div class="dice-expression">Ошибка</div>
+                            <div class="dice-details pico-color-red-500">
+                                ${result.error || 'Неизвестная ошибка при обработке нотации'}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                resultContainer.innerHTML = resultHTML;
+                resultContainer.classList.remove('hidden');
+                resultContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const notation = diceNotationInput.value.trim();
+                if (!notation) return;
+                
+                spinner.classList.remove('hidden');
+                buttonText.textContent = '';
+                rollButton.disabled = true;
+                
+                try {
+                    const response = await fetch(rollApiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        },
+                        body: new URLSearchParams({
+                            'notation': notation
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    displayResult(result);
+                    
+                } catch (error) {
+                    displayResult({
+                        status: 'error',
+                        error: 'Ошибка сети. Попробуйте еще раз.'
+                    });
+                } finally {
+                    spinner.classList.add('hidden');
+                    buttonText.textContent = 'Бросить';
+                    rollButton.disabled = false;
+                }
+            });
+
+            setTimeout(() => {
+                diceNotationInput.focus();
+            }, 100);
         });
       })();
     </script>
