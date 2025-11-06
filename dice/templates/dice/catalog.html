@@ -84,6 +84,13 @@
         const input = form.querySelector('input[name="dice-notation"]');
         if (!input) return;
 
+	
+        function submitWithText(text) {
+          const value = (text || '').trim();
+          if (!value) return;
+          input.value = value;
+        };
+
         // Клик по ссылкам в списке
         document.addEventListener('click', (e) => {
           const link = e.target.closest('a[data-fill]');

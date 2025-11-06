@@ -1,0 +1,16 @@
+# docker-compose.yml
+services:
+  web:
+    build: 
+      context: .
+      target: final
+    ports:
+      - "8000:8000"
+    volumes:
+      # НЕ монтируем staticfiles как volume - файлы уже в образе!
+      - ./db.sqlite3:/app/db.sqlite3
+      # Для разработки можно монтировать исходную статику для hot-reload
+      - ./static:/app/static
+    environment:
+      - DEBUG=1
+      - ALLOWED_HOSTS=*
