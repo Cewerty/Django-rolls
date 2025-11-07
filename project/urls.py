@@ -19,6 +19,14 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from django.http import JsonResponce
+
+def health_check(request):
+    return JsonResponse({
+        'status': 'ok',
+        'server': '192.168.170.40',
+        'database': 'connected', 
+        })
 
 urlpatterns = [
     path("admin/", admin.site.urls),
